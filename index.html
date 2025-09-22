@@ -1,40 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON Page Viewer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Table with Pagination</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      flex: 1;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: left;
+      font-size: 14px;
+    }
+    #pagination {
+      display: flex;
+      justify-content: center;
+      padding: 6px;
+      border-top: 1px solid #ddd;
+      position: sticky;
+      bottom: 0;
+      background: #fff;
+    }
+    #pagination button {
+      margin: 0 2px;
+      padding: 6px 12px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    #pagination button.active {
+      background: #007bff;
+      color: #fff;
+      border-color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <table id="data-table">
+    <thead>
+      <tr id="table-head"></tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+  <div id="pagination"></div>
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
+  <script>
+    const totalPages = 100;
+    const paginationEl = document.getElementById('pagination');
+    const tableHead = document.getElementById('table-head');
+    const tableBody = document.getElementById('table-body');
 
-        .header {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
+    function getCurrentPage() {
+      const params = new URLSearchParams(window.location.search);
+      return parseInt(params.get('page')) || 1;
+    }
 
+    function setPageInUrl(page) {
+      const params = new URLSearchParams(window.location.search);
+      params.set('page', page);
+      history.pushState({}, '', `${location.pathname}?${params}`);
+    }
+
+    async function loadPage(page) {
+      if (page < 1 || page > totalPages) return;
+      setPageInUrl(page);
+      renderPagination(page);
+
+      try {
+        const res = await fetch(`/data/${page}.json`);
+        const data = await res.json();
+
+        tableHead.innerHTML = '';
+        tableBody.innerHTML = '';
+
+        if (data.length > 0) {
+          Object.keys(data[0]).forEach(key => {
+            const th = document.createElement('th');
+            th.textContent = key;
+            tableHead.appendChild(th);
+          });
+
+          data.forEach(row => {
+            const tr = document.createElement('tr');
+            Object.values(row).forEach(val => {
+              const td = document.createElement('td');
+              td.textContent = val;
+              tr.appendChild(td);
+            });
+            tableBody.appendChild(tr);
+          });
+        } else {
+          tableBody.innerHTML = `<tr><td colspan="100%">No data available</td></tr>`;
+        }
+      } catch (err) {
+        tableBody.innerHTML = `<tr><td colspan="100%">Error loading data</td></tr>`;
+      }
+    }
+
+    function renderPagination(currentPage) {
+      paginationEl.innerHTML = '';
+
+      const btnCurrent = document.createElement('button');
+      btnCurrent.textContent = currentPage;
+      btnCurrent.classList.add('active');
+      paginationEl.appendChild(btnCurrent);
+
+      for (let i = 1; i <= 3; i++) {
+        const nextPage = currentPage + i;
+        if (nextPage <= totalPages) {
+          const btn = document.createElement('button');
+          btn.textContent = nextPage;
+          btn.addEventListener('click', () => loadPage(nextPage));
+          paginationEl.appendChild(btn);
+        }
+      }
+
+      if (currentPage < totalPages) {
+        const btnNext = document.createElement('button');
+        btn.textContent = 'Next ›';
+        btn.addEventListener('click', () => loadPage(currentPage + 1));
+        paginationEl.appendChild(btnNext);
+      }
+    }
+
+    // Init
+    const startPage = getCurrentPage();
+    loadPage(startPage);
+  </script>
+</body>
+</html>
         .header h1 {
             font-size: 2.5em;
             margin-bottom: 10px;
