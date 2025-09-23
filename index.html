@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,13 +28,13 @@
         }
 
         .list-container {
-            flex: 1;
-            overflow-y: auto;
+            /* flex: 1;
+            overflow-y: auto; */
             padding: 10px;
             background: white;
         }
 
-        .list-item {
+        /* .list-item {
             padding: 15px 20px;
             border-bottom: 1px solid #e9ecef;
             background: white;
@@ -49,6 +50,15 @@
             border-bottom: none;
         }
 
+        .link-box {
+            text-decoration: none;
+        }
+
+        .link-box:active {
+            background-color: lightgray;
+            color: purple;
+        }
+
         .item-title {
             font-weight: 600;
             color: #212529;
@@ -58,6 +68,74 @@
         .item-description {
             color: #6c757d;
             font-size: 14px;
+            line-height: 1.4;
+        } 
+        */
+
+        .link-box {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .link-box:hover {
+            background-color: #f5f5f5;
+        }
+
+        .link-box:active {
+            background-color: #e0e0e0;
+            transform: scale(0.98);
+        }
+
+        .link-box:visited {
+            color: #6b46c1;
+            /* Purple color for visited links */
+        }
+
+        .link-box:visited .item-title {
+            color: #6b46c1;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-top: 1px solid #e5e7eb;
+            background-color: #ffffff;
+            min-height: 70px;
+            max-height: 95px;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .item-title {
+            font-weight: 600;
+            color: #374151;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-right: 8px;
+        }
+
+        /* .item-description {
+  color: #6b7280;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.4;
+} */
+
+        /* Alternative: Multi-line ellipsis (if you prefer 2-3 lines instead of single line) */
+
+        .item-description {
+            color: #6b7280;
+            flex: 1;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            /* Number of lines to show */
+            -webkit-box-orient: vertical;
             line-height: 1.4;
         }
 
@@ -97,7 +175,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 5px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             position: sticky;
             bottom: 0;
         }
@@ -154,23 +232,23 @@
                 padding: 10px 5px;
                 gap: 3px;
             }
-            
+
             .page-btn {
                 min-width: 30px;
                 height: 30px;
                 font-size: 12px;
             }
-            
+
             .page-input {
                 width: 40px;
                 height: 30px;
                 font-size: 12px;
             }
-            
+
             .list-item {
-                padding: 12px 15px;
+                padding: 12px 3px;
             }
-            
+
             .page-info {
                 display: none;
             }
@@ -187,68 +265,131 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .input-container {
+            /* display: flex;
+            flex-direction: column; */
+            gap: 12px;
+            /* max-width: 400px; */
+            padding: 5px 8px;;
+        }
+
+        .type-1 {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: Arial, sans-serif;
+            outline: none;
+            resize: vertical;
+            /* allow textarea resize only vertically */
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* On focus */
+        .type-1:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 6px rgba(74, 144, 226, 0.3);
+        }
+
+        /* Placeholder style */
+        .type-1::placeholder {
+            color: #999;
+            font-style: italic;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
+        <div class="input-container">
+            <textarea placeholder="Tagline" class="type-1" id="tagline" oninput="debouncedChange(event)"></textarea>
+            <textarea rows="1" placeholder="Comment link" class="type-1" oninput="debouncedChange(event)" id="commentLink"></textarea>
+        </div>
         <div class="list-container" id="listContainer">
             <div class="loading">
                 <div class="spinner"></div>
             </div>
         </div>
-        
+
         <div class="pagination">
             <button class="page-btn" id="firstBtn">«</button>
             <button class="page-btn" id="prevBtn">‹</button>
-            
+
             <span class="page-info">Page</span>
-            <input type="number" class="page-input" id="pageInput" min="1" max="100" value="1">
-            <span class="page-info">of 100</span>
-            
+            <input type="number" class="page-input" id="pageInput" min="1" max="500" value="1">
+            <span class="page-info">of 500</span>
+
             <button class="page-btn" id="nextBtn">›</button>
             <button class="page-btn" id="lastBtn">»</button>
         </div>
     </div>
 
     <script>
+         let jsonData = [];
+         let debounceTimer;
+            function debouncedChange(e) {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    console.log("debounced");
+                    paginator.updateTagline();
+                }, 500); // runs only if no typing for 500ms
+            }
         class ListPaginator {
             constructor() {
                 this.currentPage = 1;
-                this.totalPages = 100;
+                this.totalPages = 500;
                 this.isLoading = false;
-                
+
                 this.listContainer = document.getElementById('listContainer');
                 this.pageInput = document.getElementById('pageInput');
                 this.firstBtn = document.getElementById('firstBtn');
                 this.prevBtn = document.getElementById('prevBtn');
                 this.nextBtn = document.getElementById('nextBtn');
                 this.lastBtn = document.getElementById('lastBtn');
-                
+
                 this.init();
             }
-            
+
             init() {
                 this.getCurrentPageFromURL();
                 this.bindEvents();
                 this.loadPage(this.currentPage);
             }
-            
+
             getCurrentPageFromURL() {
                 const urlParams = new URLSearchParams(window.location.search);
                 const page = parseInt(urlParams.get('page')) || 1;
                 this.currentPage = Math.max(1, Math.min(page, this.totalPages));
                 this.pageInput.value = this.currentPage;
+                document.getElementById('tagline').value = urlParams.get('tagLine')
+                document.getElementById('commentLink').value = urlParams.get('commentLink')
             }
-            
+
+            updateTagline() {
+                const url = new URL(window.location);
+                url.searchParams.set('tagLine', document.getElementById('tagline').value.trim());
+                url.searchParams.set('commentLink', document.getElementById('commentLink').value.trim());
+                window.history.pushState({}, '', url);
+                this.renderList(jsonData);
+            }
+
             updateURL() {
                 const url = new URL(window.location);
                 url.searchParams.set('page', this.currentPage);
                 window.history.pushState({}, '', url);
+                this.renderList(jsonData);
             }
-            
+
             bindEvents() {
                 // Page input change
                 this.pageInput.addEventListener('change', (e) => {
@@ -259,23 +400,23 @@
                         this.pageInput.value = this.currentPage;
                     }
                 });
-                
+
                 // Navigation buttons
                 this.firstBtn.addEventListener('click', () => this.goToPage(1));
                 this.prevBtn.addEventListener('click', () => this.goToPage(this.currentPage - 1));
                 this.nextBtn.addEventListener('click', () => this.goToPage(this.currentPage + 1));
                 this.lastBtn.addEventListener('click', () => this.goToPage(this.totalPages));
-                
+
                 // Handle browser back/forward
                 window.addEventListener('popstate', () => {
                     this.getCurrentPageFromURL();
                     this.loadPage(this.currentPage);
                 });
-                
+
                 // Keyboard navigation
                 document.addEventListener('keydown', (e) => {
                     if (document.activeElement !== this.pageInput) {
-                        switch(e.key) {
+                        switch (e.key) {
                             case 'ArrowLeft':
                                 e.preventDefault();
                                 this.goToPage(this.currentPage - 1);
@@ -288,36 +429,39 @@
                     }
                 });
             }
-            
+
             goToPage(page) {
                 if (page < 1 || page > this.totalPages || page === this.currentPage || this.isLoading) {
                     return;
                 }
-                
+
                 this.currentPage = page;
                 this.pageInput.value = page;
                 this.updateURL();
                 this.loadPage(page);
             }
-            
+
+           
+
             async loadPage(page) {
                 if (this.isLoading) return;
-                
+
                 this.isLoading = true;
                 this.updatePaginationState();
-                
+
                 try {
                     this.showLoading();
-                    
-                    const response = await fetch(`/twitter-draft/data/${page}.json`);
-                    
+
+                    const response = await fetch(`/data/quote_${page}.json`);
+
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                     }
-                    
+
                     const data = await response.json();
+                    jsonData = data;
                     this.renderList(data);
-                    
+
                 } catch (error) {
                     this.showError(error.message);
                 } finally {
@@ -325,7 +469,7 @@
                     this.updatePaginationState();
                 }
             }
-            
+
             showLoading() {
                 this.listContainer.innerHTML = `
                     <div class="loading">
@@ -333,7 +477,7 @@
                     </div>
                 `;
             }
-            
+
             showError(message) {
                 this.listContainer.innerHTML = `
                     <div class="error">
@@ -344,13 +488,13 @@
                     </div>
                 `;
             }
-            
+
             renderList(data) {
                 if (!data || !Array.isArray(data)) {
                     this.showError('Invalid data format received');
                     return;
                 }
-                
+
                 if (data.length === 0) {
                     this.listContainer.innerHTML = `
                         <div class="error">
@@ -359,24 +503,43 @@
                     `;
                     return;
                 }
-                
+                let replyId = "";
+                const tagline = document.getElementById('tagline').value.trim();
+                const t = document.getElementById('commentLink').value.trim();
+                t && t.includes(".com") && (replyId = new URL(t).pathname.split("/")[3])
+
                 const listHTML = data.map(item => `
-                    <div class="list-item">
-                        <div class="item-title">${this.escapeHtml(item.title || item.name || 'Item')}</div>
-                        <div class="item-description">${this.escapeHtml(item.description || item.content || JSON.stringify(item))}</div>
+                <a class="link-box"  target="_blank" rel="noopener" href="${this.prapareLink(item.text, tagline, replyId)}">
+                    <div class="list-item" >
+                        <span class="item-title">${this.escapeHtml(item.id)} : </span>
+                        <span class="item-description">${this.escapeHtml(item.text)}</span>
                     </div>
+                </a>
                 `).join('');
-                
+
                 this.listContainer.innerHTML = listHTML;
                 this.listContainer.scrollTop = 0;
             }
-            
+
+            prapareLink(quote, tagLine, replyId) {
+                if (quote.length + tagLine.length > 275) {
+                    const allowedQuoteLength = 275 - tagLine.length; 
+                    quote = quote.substring(0, allowedQuoteLength)
+                }
+
+                let url =  `https://twitter.com/intent/tweet?text=${encodeURIComponent(quote)}%0A%0A${encodeURIComponent(tagLine)}`;
+                if (commentLink) {
+                    url += `&in_reply_to=${encodeURIComponent(replyId)}`;
+                }
+                return url;
+            }
+
             escapeHtml(text) {
                 const div = document.createElement('div');
                 div.textContent = text;
                 return div.innerHTML;
             }
-            
+
             updatePaginationState() {
                 this.firstBtn.disabled = this.currentPage === 1 || this.isLoading;
                 this.prevBtn.disabled = this.currentPage === 1 || this.isLoading;
@@ -385,30 +548,11 @@
                 this.pageInput.disabled = this.isLoading;
             }
         }
-        
+
         // Initialize the paginator
         const paginator = new ListPaginator();
-        
-        // For demo purposes - remove this in production
-        // Mock API response for testing
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            const originalFetch = window.fetch;
-            window.fetch = function(url, options) {
-                if (url.startsWith('/list/')) {
-                    const page = parseInt(url.split('/').pop());
-                    return Promise.resolve({
-                        ok: true,
-                        json: () => Promise.resolve(
-                            Array.from({length: 20}, (_, i) => ({
-                                title: `Item ${(page - 1) * 20 + i + 1}`,
-                                description: `This is the description for item ${(page - 1) * 20 + i + 1} on page ${page}`
-                            }))
-                        )
-                    });
-                }
-                return originalFetch.apply(this, arguments);
-            };
-        }
+
     </script>
 </body>
+
 </html>
