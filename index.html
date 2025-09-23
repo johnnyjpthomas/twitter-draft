@@ -4,7 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile List</title>
+    <base href="/twitter-draft/">
+    <title>Johnny's Twitter Draft</title>
+    <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+    <link rel="manifest" href="/assets/site.webmanifest" />
     <style>
         * {
             margin: 0;
@@ -312,7 +318,7 @@
 <body>
     <div class="container">
         <div class="input-container">
-            <textarea placeholder="Tagline" class="type-1" id="tagline" oninput="debouncedChange(event)"></textarea>
+            <textarea rows="3" placeholder="Tagline" class="type-1" id="tagline" oninput="debouncedChange(event)"></textarea>
             <textarea rows="1" placeholder="Comment link" class="type-1" oninput="debouncedChange(event)" id="commentLink"></textarea>
         </div>
         <div class="list-container" id="listContainer">
