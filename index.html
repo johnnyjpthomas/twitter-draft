@@ -24,6 +24,13 @@
             --warning: #f59e0b;
             --danger: #ef4444;
 
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        /* Dark theme variables */
+        [data-theme="dark"] {
             --bg-primary: #0f0f23;
             --bg-secondary: #1a1a2e;
             --bg-tertiary: #16213e;
@@ -41,10 +48,29 @@
             --shadow-lg: 0 35px 60px -12px rgba(0, 0, 0, 0.4);
             --glow: 0 0 20px rgba(59, 130, 246, 0.3);
 
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             --gradient-bg: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        }
+
+        /* Light theme variables */
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --bg-card: rgba(0, 0, 0, 0.02);
+            --bg-glass: rgba(255, 255, 255, 0.8);
+
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #64748b;
+
+            --border: rgba(0, 0, 0, 0.1);
+            --border-hover: rgba(0, 0, 0, 0.2);
+
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 35px 60px -12px rgba(0, 0, 0, 0.12);
+            --glow: 0 0 20px rgba(59, 130, 246, 0.2);
+
+            --gradient-bg: linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%);
         }
 
         * {
@@ -95,6 +121,14 @@
             }
         }
 
+        /* Animated background particles - adjust opacity for light theme */
+        [data-theme="light"] body::before {
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.03) 0%, transparent 50%);
+        }
+
         .container {
             display: flex;
             flex-direction: column;
@@ -114,6 +148,9 @@
             top: 0;
             z-index: 100;
             box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .header h1 {
@@ -124,6 +161,72 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin: 0;
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 0.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .theme-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .theme-option:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-option.active {
+            color: white;
+            box-shadow: var(--glow);
+        }
+
+        .theme-option.active::before {
+            opacity: 1;
+        }
+
+        .theme-icon {
+            transition: all 0.3s ease;
+        }
+
+        .theme-option:not(.active) .theme-icon {
+            opacity: 0.6;
         }
 
         .input-container {
@@ -524,9 +627,29 @@
             }
         }
 
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        /* Light theme input adjustments */
+        [data-theme="light"] .type-1 {
+            background: rgba(0, 0, 0, 0.02);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] .type-1:focus {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        [data-theme="light"] .page-btn {
+            background: var(--bg-card);
+            border-color: var(--border);
+        }
+
+        [data-theme="light"] .page-input {
+            background: var(--bg-card);
+            border-color: var(--border);
+        }
+
+        [data-theme="light"] .spinner {
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-top: 3px solid var(--primary);
         }
 
         ::-webkit-scrollbar-track {
@@ -566,6 +689,14 @@
     <div class="container">
         <div class="header">
             <h1>✨Johnny's Twitter Draft</h1>
+            <div class="theme-toggle">
+                <div class="theme-option" id="lightTheme" title="Light Mode">
+                    <span class="theme-icon">☀️</span>
+                </div>
+                <div class="theme-option" id="darkTheme" title="Dark Mode">
+                    <span class="theme-icon">🌙</span>
+                </div>
+            </div>
         </div>
 
         <div class="input-container">
@@ -576,7 +707,7 @@
             </div>
             <div class="input-group">
                 <label class="input-label" for="commentLink">🔗 Comment Link</label>
-                <textarea rows="1" placeholder="https://x.com/..." class="type-1" oninput="debouncedChange(event)"
+                <textarea rows="1" placeholder="https://twitter.com/..." class="type-1" oninput="debouncedChange(event)"
                     id="commentLink"></textarea>
             </div>
         </div>
@@ -831,6 +962,53 @@
 
         // Initialize the paginator
         const paginator = new ListPaginator();
+
+        // Theme Management
+        class ThemeManager {
+            constructor() {
+                this.currentTheme = localStorage.getItem('theme') || 'dark';
+                this.lightToggle = document.getElementById('lightTheme');
+                this.darkToggle = document.getElementById('darkTheme');
+
+                this.init();
+            }
+
+            init() {
+                this.setTheme(this.currentTheme);
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                this.lightToggle.addEventListener('click', () => this.setTheme('light'));
+                this.darkToggle.addEventListener('click', () => this.setTheme('dark'));
+
+                // Listen for system theme changes
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                    if (!localStorage.getItem('theme')) {
+                        this.setTheme(e.matches ? 'dark' : 'light');
+                    }
+                });
+            }
+
+            setTheme(theme) {
+                this.currentTheme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+
+                // Update active states
+                this.lightToggle.classList.toggle('active', theme === 'light');
+                this.darkToggle.classList.toggle('active', theme === 'dark');
+
+                // Add smooth transition for theme switch
+                document.body.style.transition = 'background 0.3s ease, color 0.3s ease';
+                setTimeout(() => {
+                    document.body.style.transition = '';
+                }, 300);
+            }
+        }
+
+        // Initialize theme manager
+        const themeManager = new ThemeManager();
 
         // Add some interactive polish
         document.addEventListener('DOMContentLoaded', function () {
