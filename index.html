@@ -6,13 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="/twitter-draft/">
     <title>Johnny's Twitter Draft</title>
+    <meta name="description" content="Johnny's Twitter Draft for automated tweet comment">
     <link rel="icon" type="image/png" href="/twitter-draft/assets/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/twitter-draft/assets/favicon.svg" />
     <link rel="shortcut icon" href="/twitter-draft/assets/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/twitter-draft/assets/apple-touch-icon.png" />
     <link rel="manifest" href="/twitter-draft/assets/site.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Preload the Inter font CSS -->
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    
+    <!-- Load it non-blocking -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    </noscript>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'); */
 
         :root {
             --primary: #3b82f6;
@@ -724,7 +738,7 @@
             <button class="page-btn" id="prevBtn">◀</button>
 
             <span class="page-info">Page</span>
-            <input type="number" class="page-input" id="pageInput" min="1" max="500" value="1">
+            <input type="number" class="page-input" id="pageInput" min="1" max="500" value="1" aria-label="Page number">
             <span class="page-info">of 500</span>
 
             <button class="page-btn" id="nextBtn">▶</button>
@@ -735,6 +749,7 @@
     <script>
         let jsonData = [];
         let debounceTimer;
+        var paginator;
 
         function debouncedChange(e) {
             clearTimeout(debounceTimer);
@@ -961,7 +976,7 @@
         }
 
         // Initialize the paginator
-        const paginator = new ListPaginator();
+       
 
         // Theme Management
         class ThemeManager {
@@ -1012,6 +1027,7 @@
 
         // Add some interactive polish
         document.addEventListener('DOMContentLoaded', function () {
+             paginator = new ListPaginator();
             // Add stagger animation to list items when they load
             const observer = new MutationObserver(function (mutations) {
                 mutations.forEach(function (mutation) {
