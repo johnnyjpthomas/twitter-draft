@@ -12,6 +12,41 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/twitter-draft/assets/apple-touch-icon.png" />
     <link rel="manifest" href="/twitter-draft/assets/site.webmanifest" />
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #dbeafe;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+
+            --bg-primary: #0f0f23;
+            --bg-secondary: #1a1a2e;
+            --bg-tertiary: #16213e;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --bg-glass: rgba(255, 255, 255, 0.1);
+
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #64748b;
+
+            --border: rgba(255, 255, 255, 0.1);
+            --border-hover: rgba(255, 255, 255, 0.2);
+
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --shadow-lg: 0 35px 60px -12px rgba(0, 0, 0, 0.4);
+            --glow: 0 0 20px rgba(59, 130, 246, 0.3);
+
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-bg: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -19,257 +54,376 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f8f9fa;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gradient-bg);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            33% {
+                transform: translateY(-20px) rotate(120deg);
+            }
+
+            66% {
+                transform: translateY(-10px) rotate(240deg);
+            }
         }
 
         .container {
-            flex: 1;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            min-height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Header styling */
+        .header {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+        }
+
+        .input-container {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            margin: 1rem 2rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .input-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gradient-accent);
+            opacity: 0.6;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .type-1 {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            outline: none;
+            resize: vertical;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .type-1:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), var(--glow);
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .type-1::placeholder {
+            color: var(--text-tertiary);
+            font-weight: 400;
         }
 
         .list-container {
             flex: 1;
-            /* overflow-y: auto; */
-            padding: 10px;
-            background: white;
-        }
-
-        /* .list-item {
-            padding: 15px 20px;
-            border-bottom: 1px solid #e9ecef;
-            background: white;
-            transition: background-color 0.2s;
-            cursor: pointer;
-        }
-
-        .list-item:hover {
-            background-color: #f8f9fa;
-        }
-
-        .list-item:last-child {
-            border-bottom: none;
-        }
-
-        .link-box {
-            text-decoration: none;
-        }
-
-        .link-box:active {
-            background-color: lightgray;
-            color: purple;
-        }
-
-        .item-title {
-            font-weight: 600;
-            color: #212529;
-            margin-bottom: 5px;
-        }
-
-        .item-description {
-            color: #6c757d;
-            font-size: 14px;
-            line-height: 1.4;
-        } 
-        */
-
-        .link-box {
-            display: block;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.2s ease;
-        }
-
-        .link-box:hover {
-            background-color: #f5f5f5;
-        }
-
-        .link-box:active {
-            background-color: #e0e0e0;
-            transform: scale(0.98);
-        }
-
-        .link-box:visited {
-            color: #6b46c1;
-            /* Purple color for visited links */
-        }
-
-        .link-box:visited .item-title {
-            color: #6b46c1;
+            margin: 0 2rem 2rem;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            min-height: 400px;
         }
 
         .list-item {
             display: flex;
             align-items: center;
-            padding: 12px 16px;
-            border-top: 1px solid #e5e7eb;
-            background-color: #ffffff;
-            min-height: 70px;
-            max-height: 95px;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
             overflow: hidden;
-            box-sizing: border-box;
+        }
+
+        .list-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: left 0.6s;
+        }
+
+        .link-box {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            border-radius: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .link-box:hover .list-item {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            transform: translateX(4px);
+            border-left: 3px solid var(--primary);
+        }
+
+        .link-box:hover .list-item::before {
+            left: 100%;
+        }
+
+        .link-box:active .list-item {
+            transform: translateX(2px) scale(0.995);
+        }
+
+        .link-box:visited {
+            color: var(--secondary);
+        }
+
+        .link-box:visited .item-title {
+            color: var(--secondary);
         }
 
         .item-title {
             font-weight: 600;
-            color: #374151;
+            color: var(--primary);
             white-space: nowrap;
             flex-shrink: 0;
-            margin-right: 8px;
+            margin-right: 1rem;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
         }
 
-        /* .item-description {
-  color: #6b7280;
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  line-height: 1.4;
-} */
-
-        /* Alternative: Multi-line ellipsis (if you prefer 2-3 lines instead of single line) */
-
         .item-description {
-            color: #6b7280;
+            color: var(--text-secondary);
             flex: 1;
             overflow: hidden;
             display: -webkit-box;
-            -webkit-line-clamp: 3;
-            /* Number of lines to show */
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            line-height: 1.4;
+            line-height: 1.5;
+            font-size: 0.9rem;
         }
 
         .loading {
             display: flex;
-            flex: 1;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100%;
-            color: #6c757d;
+            height: 400px;
+            gap: 1rem;
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
+            font-weight: 500;
         }
 
         .error {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 200px;
-            color: #dc3545;
+            height: 300px;
+            color: var(--danger);
             flex-direction: column;
+            gap: 1rem;
         }
 
         .retry-btn {
-            margin-top: 10px;
-            padding: 8px 16px;
-            background: #007bff;
+            padding: 0.75rem 1.5rem;
+            background: var(--gradient-primary);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
         }
 
         .pagination {
-            background: white;
-            border-top: 1px solid #e9ecef;
-            padding: 15px 10px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 2rem;
             display: flex;
-            position: fixed;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            gap: 5px;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            gap: 0.75rem;
+            position: sticky;
             bottom: 0;
-            width: 100%;
+            box-shadow: var(--shadow-lg);
+            margin-top: auto;
         }
 
         .page-btn {
-            min-width: 35px;
-            height: 35px;
-            border: 1px solid #dee2e6;
-            background: white;
-            color: #007bff;
-            border-radius: 4px;
+            min-width: 44px;
+            height: 44px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-radius: 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            transition: all 0.2s;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
         }
 
-        .page-btn:hover {
-            background: #e9ecef;
+        .page-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+        }
+
+        .page-btn:hover:not(:disabled)::before {
+            opacity: 0.1;
         }
 
         .page-btn.active {
-            background: #007bff;
+            background: var(--gradient-primary);
             color: white;
-            border-color: #007bff;
+            border-color: var(--primary);
+            box-shadow: var(--glow);
         }
 
         .page-btn:disabled {
-            background: #f8f9fa;
-            color: #6c757d;
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-tertiary);
             cursor: not-allowed;
-            border-color: #dee2e6;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
         .page-input {
-            width: 50px;
-            height: 35px;
+            width: 60px;
+            height: 44px;
             text-align: center;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            margin: 0 5px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .page-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .page-info {
-            color: #6c757d;
-            font-size: 12px;
-            margin: 0 10px;
-        }
-
-        @media (max-width: 480px) {
-            .pagination {
-                padding: 10px 5px;
-                gap: 3px;
-            }
-
-            .page-btn {
-                min-width: 30px;
-                height: 30px;
-                font-size: 12px;
-            }
-
-            .page-input {
-                width: 40px;
-                height: 30px;
-                font-size: 12px;
-            }
-
-            .list-item {
-                padding: 12px 3px;
-            }
-
-            .page-info {
-                display: none;
-            }
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin: 0 0.5rem;
         }
 
         .spinner {
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #007bff;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary);
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
         }
 
         @keyframes spin {
@@ -282,79 +436,183 @@
             }
         }
 
-        .input-container {
-            /* display: flex;
-            flex-direction: column; */
-            gap: 12px;
-            /* max-width: 400px; */
-            padding: 5px 8px;
-            ;
+        /* Pulse animation for active elements */
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
-        .type-1 {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 15px;
-            font-family: Arial, sans-serif;
-            outline: none;
-            resize: vertical;
-            /* allow textarea resize only vertically */
-            transition: all 0.2s ease-in-out;
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        /* On focus */
-        .type-1:focus {
-            border-color: #4a90e2;
-            box-shadow: 0 0 6px rgba(74, 144, 226, 0.3);
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+            }
+
+            .header {
+                padding: 1rem;
+                margin: 0;
+            }
+
+            .input-container {
+                margin: 1rem;
+                padding: 1.5rem;
+                border-radius: 16px;
+            }
+
+            .list-container {
+                margin: 0 1rem 1rem;
+                border-radius: 16px;
+            }
+
+            .list-item {
+                padding: 1rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .item-title {
+                margin-right: 0;
+                white-space: normal;
+            }
+
+            .pagination {
+                padding: 1rem;
+                gap: 0.5rem;
+            }
+
+            .page-btn {
+                min-width: 40px;
+                height: 40px;
+                font-size: 0.75rem;
+            }
+
+            .page-input {
+                width: 50px;
+                height: 40px;
+            }
+
+            .page-info {
+                font-size: 0.75rem;
+                display: none;
+            }
         }
 
-        /* Placeholder style */
-        .type-1::placeholder {
-            color: #999;
-            font-style: italic;
+        @media (max-width: 480px) {
+            .input-container {
+                margin: 0.5rem;
+                padding: 1rem;
+            }
+
+            .list-container {
+                margin: 0 0.5rem 0.5rem;
+            }
+
+            .header h1 {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Focus styles for accessibility */
+        .page-btn:focus-visible,
+        .type-1:focus-visible,
+        .page-input:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Dark mode refinements */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #030712;
+                --bg-secondary: #111827;
+                --bg-tertiary: #1f2937;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="input-container">
-            <textarea rows="3" placeholder="Tagline" class="type-1" id="tagline"
-                oninput="debouncedChange(event)"></textarea>
-            <textarea rows="1" placeholder="Comment link" class="type-1" oninput="debouncedChange(event)"
-                id="commentLink"></textarea>
+        <div class="header">
+            <h1>✨Johnny's Twitter Draft</h1>
         </div>
+
+        <div class="input-container">
+            <div class="input-group">
+                <label class="input-label" for="tagline">🎯 Your Tagline</label>
+                <textarea rows="3" placeholder="Add your compelling tagline here..." class="type-1" id="tagline"
+                    oninput="debouncedChange(event)"></textarea>
+            </div>
+            <div class="input-group">
+                <label class="input-label" for="commentLink">🔗 Comment Link</label>
+                <textarea rows="1" placeholder="https://x.com/..." class="type-1" oninput="debouncedChange(event)"
+                    id="commentLink"></textarea>
+            </div>
+        </div>
+
         <div class="list-container" id="listContainer">
             <div class="loading">
                 <div class="spinner"></div>
+                <div class="loading-text">Loading inspiring quotes...</div>
             </div>
         </div>
 
         <div class="pagination">
-            <button class="page-btn" id="firstBtn">«</button>
-            <button class="page-btn" id="prevBtn">‹</button>
+            <button class="page-btn" id="firstBtn">⏮</button>
+            <button class="page-btn" id="prevBtn">◀</button>
 
             <span class="page-info">Page</span>
             <input type="number" class="page-input" id="pageInput" min="1" max="500" value="1">
             <span class="page-info">of 500</span>
 
-            <button class="page-btn" id="nextBtn">›</button>
-            <button class="page-btn" id="lastBtn">»</button>
+            <button class="page-btn" id="nextBtn">▶</button>
+            <button class="page-btn" id="lastBtn">⏭</button>
         </div>
     </div>
 
     <script>
         let jsonData = [];
         let debounceTimer;
+
         function debouncedChange(e) {
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
                 console.log("debounced");
                 paginator.updateTagline();
-            }, 500); // runs only if no typing for 500ms
+            }, 500);
         }
+
         class ListPaginator {
             constructor() {
                 this.currentPage = 1;
@@ -382,8 +640,8 @@
                 const page = parseInt(urlParams.get('page')) || 1;
                 this.currentPage = Math.max(1, Math.min(page, this.totalPages));
                 this.pageInput.value = this.currentPage;
-                document.getElementById('tagline').value = urlParams.get('tagLine')
-                document.getElementById('commentLink').value = urlParams.get('commentLink')
+                document.getElementById('tagline').value = urlParams.get('tagLine') || '';
+                document.getElementById('commentLink').value = urlParams.get('commentLink') || '';
             }
 
             updateTagline() {
@@ -402,7 +660,6 @@
             }
 
             bindEvents() {
-                // Page input change
                 this.pageInput.addEventListener('change', (e) => {
                     const page = parseInt(e.target.value);
                     if (page >= 1 && page <= this.totalPages) {
@@ -412,21 +669,18 @@
                     }
                 });
 
-                // Navigation buttons
                 this.firstBtn.addEventListener('click', () => this.goToPage(1));
                 this.prevBtn.addEventListener('click', () => this.goToPage(this.currentPage - 1));
                 this.nextBtn.addEventListener('click', () => this.goToPage(this.currentPage + 1));
                 this.lastBtn.addEventListener('click', () => this.goToPage(this.totalPages));
 
-                // Handle browser back/forward
                 window.addEventListener('popstate', () => {
                     this.getCurrentPageFromURL();
                     this.loadPage(this.currentPage);
                 });
 
-                // Keyboard navigation
                 document.addEventListener('keydown', (e) => {
-                    if (document.activeElement !== this.pageInput) {
+                    if (document.activeElement !== this.pageInput && !document.activeElement.classList.contains('type-1')) {
                         switch (e.key) {
                             case 'ArrowLeft':
                                 e.preventDefault();
@@ -451,8 +705,6 @@
                 this.updateURL();
                 this.loadPage(page);
             }
-
-
 
             async loadPage(page) {
                 if (this.isLoading) return;
@@ -488,6 +740,7 @@
                 this.listContainer.innerHTML = `
                     <div class="loading">
                         <div class="spinner"></div>
+                        <div class="loading-text">Loading inspiring quotes...</div>
                     </div>
                 `;
             }
@@ -495,9 +748,9 @@
             showError(message) {
                 this.listContainer.innerHTML = `
                     <div class="error">
-                        <div>Error loading data: ${message}</div>
+                        <div>⚠️ Error loading data: ${message}</div>
                         <button class="retry-btn" onclick="paginator.loadPage(${this.currentPage})">
-                            Retry
+                            🔄 Retry
                         </button>
                     </div>
                 `;
@@ -512,20 +765,27 @@
                 if (data.length === 0) {
                     this.listContainer.innerHTML = `
                         <div class="error">
-                            <div>No data available for page ${this.currentPage}</div>
+                            <div>📭 No data available for page ${this.currentPage}</div>
                         </div>
                     `;
                     return;
                 }
+
                 let replyId = "";
                 const tagline = document.getElementById('tagline').value.trim();
                 const t = document.getElementById('commentLink').value.trim();
-                t && t.includes(".com") && (replyId = new URL(t).pathname.split("/")[3])
+                if (t && t.includes(".com")) {
+                    try {
+                        replyId = new URL(t).pathname.split("/")[3];
+                    } catch (e) {
+                        console.warn('Invalid URL format:', t);
+                    }
+                }
 
                 const listHTML = data.map(item => `
-                <a class="link-box"  target="_blank" rel="noopener" href="${this.prapareLink(item.text, tagline, replyId)}">
-                    <div class="list-item" >
-                        <span class="item-title">${this.escapeHtml(item.id)} : </span>
+                <a class="link-box" target="_blank" rel="noopener" href="${this.prepareLink(item.text, tagline, replyId)}">
+                    <div class="list-item">
+                        <span class="item-title">#${this.escapeHtml(item.id)}</span>
                         <span class="item-description">${this.escapeHtml(item.text)}</span>
                     </div>
                 </a>
@@ -535,14 +795,20 @@
                 this.listContainer.scrollTop = 0;
             }
 
-            prapareLink(quote, tagLine, replyId) {
-                if (quote.length + tagLine.length > 275) {
-                    const allowedQuoteLength = 275 - tagLine.length;
-                    quote = quote.substring(0, allowedQuoteLength)
+            prepareLink(quote, tagLine, replyId) {
+                let combinedText = quote;
+                if (tagLine) {
+                    combinedText = `${quote}\n\n${tagLine}`;
                 }
 
-                let url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(quote)}%0A%0A${encodeURIComponent(tagLine)}`;
-                if (commentLink) {
+                if (combinedText.length > 275) {
+                    const allowedQuoteLength = 275 - (tagLine ? tagLine.length + 4 : 0); // 4 for \n\n
+                    quote = quote.substring(0, Math.max(0, allowedQuoteLength));
+                    combinedText = tagLine ? `${quote}\n\n${tagLine}` : quote;
+                }
+
+                let url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(combinedText)}`;
+                if (replyId) {
                     url += `&in_reply_to=${encodeURIComponent(replyId)}`;
                 }
                 return url;
@@ -566,6 +832,31 @@
         // Initialize the paginator
         const paginator = new ListPaginator();
 
+        // Add some interactive polish
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add stagger animation to list items when they load
+            const observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (mutation.type === 'childList') {
+                        const newItems = mutation.target.querySelectorAll('.list-item');
+                        newItems.forEach((item, index) => {
+                            item.style.opacity = '0';
+                            item.style.transform = 'translateY(20px)';
+                            setTimeout(() => {
+                                item.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+                                item.style.opacity = '1';
+                                item.style.transform = 'translateY(0)';
+                            }, index * 50);
+                        });
+                    }
+                });
+            });
+
+            observer.observe(document.getElementById('listContainer'), {
+                childList: true,
+                subtree: true
+            });
+        });
     </script>
 </body>
 
