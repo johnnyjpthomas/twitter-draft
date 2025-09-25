@@ -939,6 +939,10 @@
 
                 this.listContainer.innerHTML = listHTML;
                 this.listContainer.scrollTop = 0;
+                window.scrollTo({
+  top: 0,
+  behavior: 'smooth'
+});
             }
 
             prepareLink(quote, tagLine, replyId) {
